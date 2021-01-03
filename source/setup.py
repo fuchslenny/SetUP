@@ -3,6 +3,7 @@ import psutil
 from source import writer
 from source import create_gui
 
+#constant for multi platforming
 uname = platform.uname()
 
 
@@ -48,32 +49,44 @@ def cpu_tests():
     except Exception:
         pass
 
+    return content
+
 
 def memory_tests():
-    pass
+    content = "Memory Info:\n"
+
+    return content
 
 
 def disk_tests():
-    pass
+    content = "Disk Info:\n"
+
+    for partition in psutil.disk_partitions():
+        content.append(f"Device: {partition.device}\n", f"\tMountpoint: {partition.mountpoint}\n",
+                       f"\tFile system type: {partition.fstype}\n")
+        try:
+            partition_usage = psutil.disk_usage(partition.mountpoint)
+        except PermissionError:
+            continue
+
+        content.append(f"Total Size: {partition_usage.total}\n", f"Used: {partition_usage.used}\n",
+                       f"Percentage: {partition_usage.percent}\n")
+
+    return content
 
 
 def othersys_tests():
-    pass
+    content = "Other System Info:\n"
+
+    return content
 
 
 def process_tests():
-    pass
+    content = "Process Info:\n"
+
+    return content
 
 
 if __name__ == "__main__":
     main()
 
-
-"""
-CPU
-Memory
-Disks
-(Network)
-Other system info
-Processes
-"""
