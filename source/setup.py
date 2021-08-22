@@ -1,20 +1,20 @@
 import platform
 import psutil
-from source import writer
-from source import create_gui
+import writer
 
 #constant for multi platforming
 uname = platform.uname()
 
 
 def main():
-    write_content = checks()
+    configure_arr = writer.configure()
+    write_content = checks(configure_arr)
     writer.write_info(write_content)
 
 
 #checks the ticked boxes
 def checks(check_arr):
-    content = ""
+    content = []
 
     if check_arr[0]:
         cpu_content = cpu_tests()
@@ -36,12 +36,14 @@ def checks(check_arr):
 
 
 def cpu_tests():
-    content = "CPU Info:\n"
+    content = ["CPU Info: "]
     try:
-        content.append("Cores:", psutil.cpu_count(logical=False), "\n")
-        content.append("Logical Cores:", psutil.cpu_count(logical=True), "\n")
-        content.append(f"Max Frequency: {psutil.cpu_freq().current:.1f}Mhz\n")
-        content.append(f"CPU Usage: {psutil.cpu_percent()}%\n")
+        content.append("Cores:", psutil.cpu_count(logical=False))
+
+        content.append("Cores:", psutil.cpu_count(logical=False))
+        content.append("Logical Cores:", psutil.cpu_count(logical=True))
+        content.append(f"Max Frequency: {psutil.cpu_freq().current:.1f}Mhz")
+        content.append(f"CPU Usage: {psutil.cpu_percent()}%")
         content.append("CPU Usage/Core:")
         for i, perc in enumerate(psutil.cpu_percent(percpu=True, interval=1)):
             content.append(f"Core {i}: {perc}%")
@@ -53,36 +55,36 @@ def cpu_tests():
 
 
 def memory_tests():
-    content = "Memory Info:\n"
+    content = ["Memory Info: "]
 
     return content
 
 
 def disk_tests():
-    content = "Disk Info:\n"
+    content = ["Disk Info: "]
 
     for partition in psutil.disk_partitions():
-        content.append(f"Device: {partition.device}\n", f"\tMountpoint: {partition.mountpoint}\n",
-                       f"\tFile system type: {partition.fstype}\n")
+        content.append((f"Device: {partition.device} ", f"\tMountpoint: {partition.mountpoint} ",
+                       f"\tFile system type: {partition.fstype} "))
         try:
             partition_usage = psutil.disk_usage(partition.mountpoint)
         except PermissionError:
             continue
 
-        content.append(f"Total Size: {partition_usage.total}\n", f"Used: {partition_usage.used}\n",
-                       f"Percentage: {partition_usage.percent}\n")
+        content.append((f"Total Size: {partition_usage.total} ", f"Used: {partition_usage.used} ",
+                       f"Percentage: {partition_usage.percent} "))
 
     return content
 
 
 def othersys_tests():
-    content = "Other System Info:\n"
+    content = ["Other System Info: "]
 
     return content
 
 
 def process_tests():
-    content = "Process Info:\n"
+    content = ["Process Info: "]
 
     return content
 
